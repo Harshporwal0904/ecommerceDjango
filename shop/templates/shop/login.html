@@ -1,0 +1,38 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="checkout-form" style="margin-top: 4rem;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Login</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color: red; font-size: 0.9rem; margin-top: 0.25rem;">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn" style="width: 100%;">Login</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem;">
+        <p>Don't have an account? <a href="{% url 'register' %}"
+                style="color: var(--primary); font-weight: 500;">Register here</a></p>
+    </div>
+</div>
+
+<script>
+    // Add form-control class to django form fields for keys
+    document.querySelectorAll('input').forEach(input => {
+        input.classList.add('form-control');
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shop{% endblock %} | LuxeStore</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'shop/style.css' %}">
+</head>
+
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="{% url 'product_list' %}" class="logo">LuxeStore</a>
+            <ul class="nav-links">
+                <li><a href="{% url 'product_list' %}">Home</a></li>
+
+                {% if user.is_authenticated %}
+                <li><span style="color: var(--gray);">Hi, {{ user.username }}</span></li>
+                <li><a href="{% url 'order_list' %}">My Orders</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+
+                <li>
+                    <a href="{% url 'cart_detail' %}" class="cart-link">
+                        Cart
+                        {% if cart.cartitem_set.count > 0 %}
+                        <span>({{ cart.cartitem_set.count }})</span>
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% if messages %}
+        <div style="margin-top: 1rem;">
+            {% for message in messages %}
+            <div class="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="text-align: center; padding: 2rem 0; margin-top: 4rem; color: var(--gray);">
+        <p>&copy; 2024 LuxeStore. All rights reserved. | <a href="{% url 'admin:index' %}"
+                style="color: var(--gray); text-decoration: none;">Admin Panel</a></p>
+    </footer>
+</body>
+
+</html>

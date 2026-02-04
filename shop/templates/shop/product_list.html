@@ -1,0 +1,94 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<header>
+    <h1>Discover Luxury</h1>
+    <p class="description">Curated items for the discerning taste.</p>
+</header>
+
+
+<div class="shop-container" style="display: flex; gap: 2rem;">
+    <!-- Sidebar / Filters -->
+    <aside style="width: 250px; flex-shrink: 0;">
+        <h3 style="margin-bottom: 1rem;">Categories</h3>
+        <ul class="category-list">
+            <li>
+                <a href="{% url 'product_list' %}" class="{% if not selected_category %}active{% endif %}">
+                    All Products
+                </a>
+            </li>
+            {% for category in categories %}
+            <li>
+                <a href="?category={{ category.id }}"
+                    class="{% if selected_category == category.id %}active{% endif %}">
+                    {{ category.name }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <!-- Product Grid -->
+    <div style="flex-grow: 1;">
+        <div class="product-grid">
+            {% for product in products %}
+            <a href="{% url 'product_detail' product.pk %}" class="product-card">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                <div class="product-image"></div>
+                {% endif %}
+                <div class="product-info">
+                    <h3 class="product-title">{{ product.name }}</h3>
+                    <p class="product-price">${{ product.price }}</p>
+                    <span class="btn">View Details</span>
+                </div>
+            </a>
+            {% empty %}
+            <p style="text-align: center; grid-column: 1/-1;">No products found in this category.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .category-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    .category-list a {
+        display: block;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        color: var(--dark);
+        font-weight: 500;
+    }
+
+    .category-list a:hover,
+    .category-list a.active {
+        background-color: var(--primary);
+        color: var(--white);
+    }
+
+    @media (max-width: 768px) {
+        .shop-container {
+            flex-direction: column;
+        }
+
+        aside {
+            width: 100%;
+        }
+
+        .category-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .category-list a {
+            white-space: nowrap;
+        }
+    }
+</style>
+{% endblock %}

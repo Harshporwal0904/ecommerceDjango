@@ -1,0 +1,55 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="product-header">
+    <h1>My Orders</h1>
+</div>
+
+{% if orders %}
+<div style="overflow-x: auto;">
+    <table
+        style="width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <thead>
+            <tr style="background-color: #f8f9fa; border-bottom: 2px solid #eee;">
+                <th style="padding: 1rem; text-align: left;">Order ID</th>
+                <th style="padding: 1rem; text-align: left;">Date</th>
+                <th style="padding: 1rem; text-align: left;">Total Price</th>
+                <th style="padding: 1rem; text-align: left;">Status</th>
+                <th style="padding: 1rem; text-align: left;">Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 1rem;">#{{ order.id }}</td>
+                <td style="padding: 1rem;">{{ order.created_at|date:"M d, Y" }}</td>
+                <td style="padding: 1rem;">${{ order.total_price }}</td>
+                <td style="padding: 1rem;">
+                    {% if order.is_delivered %}
+                    <span style="color: green; font-weight: 500;">Delivered</span>
+                    {% else %}
+                    <span style="color: orange; font-weight: 500;">Pending</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 1rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--gray);">
+                        {% for item in order.orderitem_set.all %}
+                        <li>{{ item.quantity }} x {{ item.product.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p style="text-align: center; margin-top: 2rem; color: var(--gray);">You have no orders yet.</p>
+<div style="text-align: center; margin-top: 1rem;">
+    <a href="{% url 'product_list' %}" class="btn">Start Shopping</a>
+</div>
+{% endif %}
+
+{% endblock %}
